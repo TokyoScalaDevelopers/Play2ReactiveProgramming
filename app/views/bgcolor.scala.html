@@ -1,0 +1,37 @@
+@()(implicit r: RequestHeader)
+
+@main("Background color test") {
+<script type="text/javascript">
+jQuery(function($) {
+    var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
+    var bgsocket = new WS("@routes.Application.bgcolorSocket.webSocketURL()")
+
+    var receiveEvent = function(event) {
+        var data = JSON.parse(event.data)
+
+        // Handle errors
+        if(data.error) {
+            bgsocket.close()
+            return
+        }
+
+        if(data["kind"] == "update") {
+            var perc = data["count"] / data["max"]
+            console.log("percentage: ", perc)
+            var red = 41, green = 207, blue = 41;
+            var v = "rgb(" + parseInt(red * perc) + ", " + parseInt(green * perc) + ", " + parseInt(blue * perc) + ")"
+            $("body").css("background-color", v)
+        }
+    }
+
+    $(".reset-max").click(function() {
+        bgsocket.send(JSON.stringify({action: "reset"}))
+    })
+
+    bgsocket.onmessage = receiveEvent
+})
+</script>
+<p>Hello! This is an exploration into reactive web programming, with an emphasis on user partitcipation. The background of this webpage is determined by the current number of connections divided by the maximum number of simultaneous connections (clients / max_clients). Open a couple more tabs, then close them to see the colors change in the tabs you still have open! "Reset max clients" button will reset max_clients.</p>
+
+<input type="button" class="reset-max" value="Reset max clients" />
+}
