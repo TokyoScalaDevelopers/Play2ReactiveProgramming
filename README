@@ -1,4 +1,10 @@
-This is your new Play application
-=====================================
+Play2ReactiveProgramming Examples!
+==================================
 
-This file will be packaged with your application, when using `play dist`.
+Have fun!
+
+Currently, the following toys exist:
+
+/bgcolor/ - Use websockets to dynamically calculate the background color of the page, depending on how many users are connected
+
+Feel free to add more if inspiration strikes!
